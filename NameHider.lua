@@ -96,7 +96,10 @@ local function SetValue(cvar, value)
     return ok and result ~= false
 end
 
+local testMode = false -- session only, so it can't get stuck on
+
 local function IsInCity()
+    if testMode then return true end
     local pvpType
     if C_PvP and C_PvP.GetZonePVPInfo then
         pvpType = C_PvP.GetZonePVPInfo()
@@ -160,11 +163,13 @@ end
 local function UpdatePanel()
     if not panel or not panel:IsVisible() then return end
     for key, check in pairs(panel.checks) do check:SetChecked(DB[key]) end
+    panel.test:SetText(testMode and "Stop testing" or "Test here (pretend this is a city)")
     local status
     if not DB.enabled then
         status = "|cffaaaaaaTurned off. Your normal name settings are active.|r"
     elseif next(DB.saved) then
-        status = "|cffff7777In a city: names are hidden.|r"
+        status = testMode and "|cffff7777Testing: names are hidden as if in a city.|r"
+            or "|cffff7777In a city: names are hidden.|r"
     elseif IsInCity() then
         status = "|cffffd100In a city: nothing to hide with the current options.|r"
     else
@@ -214,6 +219,18 @@ function NameHider_Toggle()
     DB.enabled = not DB.enabled
     Apply()
     Print(DB.enabled and "on. Names will be hidden in cities." or "off. Your normal name settings are active.")
+end
+
+function NameHider_ToggleTest()
+    testMode = not testMode
+    Apply()
+    if not testMode then
+        Print("test stopped.")
+    elseif DB.enabled then
+        Print("testing: acting as if you are in a city. Run /namehider test again to stop.")
+    else
+        Print("testing, but Name Hider is turned off, so nothing is hidden.")
+    end
 end
 
 local function ResetToDefaults()
@@ -282,13 +299,18 @@ local function CreatePanel()
         "Your targeted unit always shows its name. If you change a hidden name setting while in a city, " ..
         "your change is kept and Name Hider leaves it alone until you next enter a city.\n\n" ..
         "A key to toggle Name Hider can be set in Key Bindings > AddOns.\n" ..
-        "Commands: /namehider toggle | reset | status")
+        "Commands: /namehider toggle | test | reset | status")
 
     local reset = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
     reset:SetSize(260, 24)
     reset:SetPoint("TOPLEFT", 18, -330)
     reset:SetText("Reset name settings to game defaults")
     reset:SetScript("OnClick", ResetToDefaults)
+
+    panel.test = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
+    panel.test:SetSize(260, 24)
+    panel.test:SetPoint("LEFT", reset, "RIGHT", 12, 0)
+    panel.test:SetScript("OnClick", NameHider_ToggleTest)
 
     panel:SetScript("OnShow", UpdatePanel)
 
@@ -386,6 +408,8 @@ SlashCmdList.NAMEHIDER = function(message)
         NameHider_Toggle()
     elseif command == "reset" then
         ResetToDefaults()
+    elseif command == "test" then
+        NameHider_ToggleTest()
     elseif command == "status" then
         Print(VERSION .. " | " .. (DB.enabled and "on" or "off") .. " | in city: " .. tostring(IsInCity()) ..
             " | zone: " .. tostring(GetRealZoneText and GetRealZoneText()))

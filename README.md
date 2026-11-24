@@ -20,6 +20,7 @@ Name Hider only borrows the game's own name settings while you are in a city:
 - Settings: `/namehider`, the minimap AddOns menu, or Options > AddOns > Name Hider.
 - Key binding: Key Bindings > AddOns > Toggle Name Hider.
 - `/namehider toggle`: turn hiding on/off.
+- `/namehider test`: act as if you are in a city, wherever you are (also a button in settings). Run again to stop.
 - `/namehider status`: show the current state and the settings it manages.
 - `/namehider reset`: put every name setting Name Hider manages back to game defaults.
 
