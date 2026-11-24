@@ -1,5 +1,7 @@
 # Name Hider
 
+![Name Hider](https://raw.githubusercontent.com/EsotericSoftware/wow-name-hider/main/logo.png)
+
 Hides names over people's heads while you are in major cities and restores your settings when you leave.
 
 - Hides player and pet names in cities (on by default).
