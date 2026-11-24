@@ -1,0 +1,11 @@
+## Interface: 16001
+## Title: Name Hider
+## Notes: Hides player (and optionally NPC) names in major cities, then puts your name settings back when you leave.
+## Author: Nate
+## Version: @project-version@
+## SavedVariables: NameHiderDB
+## IconTexture: Interface\Icons\INV_Misc_Eye_01
+## AddonCompartmentFunc: NameHider_OnCompartmentClick
+## X-Credits: Inspired by NameDisable.
+
+NameHider.lua

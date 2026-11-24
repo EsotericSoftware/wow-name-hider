@@ -1,0 +1,6 @@
+<Bindings>
+  <!-- No header: Forever lists a header as a row of its own. -->
+  <Binding name="NAMEHIDER_TOGGLE" category="ADDONS">
+    NameHider_Toggle()
+  </Binding>
+</Bindings>
